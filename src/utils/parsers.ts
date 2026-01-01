@@ -17,7 +17,7 @@ function parseWhatsApp(text: string): Message[] {
 
     // STRAIGHT REGEX (Date + Time)
     // Supports: "d/m/y, h:mm a - ..." and "[d/m/y, h:mm:ss a] ..."
-    const strictRegex = /^(?:\[)?(\d{1,2}\/\d{1,2}\/\d{2,4})(?:,\s*|\s+)(\d{1,2}:\d{2}(?::\d{2})?(?:\s*[aApP][mM])?)(?:\]|\s+-\s+) (.*?): (.*)/;
+    const strictRegex = /^(?:\[)?(\d{1,2}\/\d{1,2}\/\d{2,4})(?:,\s*|\s+)(\d{1,2}:\d{2}(?::\d{2})?(?:\s*[aApP][mM])?)(?:\]\s|\s+-\s+)(.*?): (.*)/;
 
     // LOOSE REGEX (Original - Date Only)
     // Matches: "d/m/y ... - ..."
@@ -33,17 +33,28 @@ function parseWhatsApp(text: string): Message[] {
         let content = '';
 
         // 1. Try Strict Parsing (with Time)
-        const strictMatch = cleanLine.match(strictRegex);
+        // Normalize: Replace non-breaking spaces (\u202f) with normal spaces
+        // Uppercase AM/PM for easier parsing
+        const normalizedLine = cleanLine.replace(/\u202f/g, ' ');
+        const strictMatch = normalizedLine.match(strictRegex);
+
         if (strictMatch) {
-            const [_, dateStr, timeStr, pAuthor, pContent] = strictMatch;
+            let [_, dateStr, timeStr, pAuthor, pContent] = strictMatch;
+
+            // Normalize Time: "9:26 pm" -> "9:26 PM"
+            timeStr = timeStr.toUpperCase();
+
             const fullDateStr = `${dateStr} ${timeStr}`;
 
             // Try explicit formatting first
+            // Note: date-fns v2/v3 'a'/'aa' matches AM/PM. 
+            // We use 'd/M/yy' covering both single and double digit days/months.
             const formatsToTry = [
-                'd/M/yy h:mm aa', 'd/M/yyyy h:mm aa', // 12-hour
-                'd/M/yy HH:mm', 'd/M/yyyy HH:mm',   // 24-hour
-                'd/M/yy h:mm:ss aa', 'd/M/yyyy h:mm:ss aa', // Seconds
-                'd/M/yy HH:mm:ss', 'd/M/yyyy HH:mm:ss' // Seconds 24h
+                'd/M/yy h:mm a', 'd/M/yyyy h:mm a',
+                'd/M/yy h:mm aa', 'd/M/yyyy h:mm aa',
+                'd/M/yy HH:mm', 'd/M/yyyy HH:mm',
+                'M/d/yy h:mm a', 'M/d/yyyy h:mm a', // US fallback
+                'd/M/yy h:mm:ss a', 'd/M/yyyy h:mm:ss a',
             ];
 
             for (const fmt of formatsToTry) {
@@ -58,7 +69,8 @@ function parseWhatsApp(text: string): Message[] {
 
             // Fallback: Date.parse() for very standard localized strings
             if (!date || !isValid(date)) {
-                const fallbackDate = new Date(fullDateStr);
+                // Try replacing commas/dots just in case
+                const fallbackDate = new Date(fullDateStr.replace(/,/g, ''));
                 if (isValid(fallbackDate)) {
                     date = fallbackDate;
                     author = pAuthor;
