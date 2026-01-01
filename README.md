@@ -1,73 +1,73 @@
-# React + TypeScript + Vite
+# Chat Wrapped 2025 🎁✨
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Analyze your WhatsApp and Telegram chat history privately on your device. Zero data upload.**
 
-Currently, two official plugins are available:
+[![](https://img.shields.io/badge/Privacy-First-green.svg)]() [![](https://img.shields.io/badge/Made%20with-React-blue.svg)]() [![](https://img.shields.io/badge/License-MIT-orange.svg)]()
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Turn your chat logs into a beautiful, interactive "Story" experience. Discover your top chatters, busiest times, emoji vibes, and more—all without your data ever leaving your browser.
 
-## React Compiler
+## ✨ Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **🔒 Privacy First**: All parsing and analysis happens 100% client-side in your browser. No servers, no uploads.
+- **📱 Multi-Platform**: Supports **WhatsApp** (`.txt` exports) and **Telegram** (`result.json` exports).
+- **📊 Interactive Stories**: Navigate through your stats like an Instagram Story.
+  - **The Chatterbox**: Total messages & top senders.
+  - **The Night Owl**: Heatmap of your most active hours.
+  - **The Ghost**: Average reply times and ghosting stats.
+  - **The Vibe**: Word clouds and top emojis.
+  - **The Streaks**: Longest conversation streaks.
+- **📸 Export & Share**: Download individual slides or your entire wrapped summary as high-quality images (1080x1920) perfect for sharing on social media.
 
-## Expanding the ESLint configuration
+## 🚀 Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
+- Node.js (v18+)
+- npm or yarn
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Installation
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+1.  Clone the repository:
+    ```bash
+    git clone https://github.com/sivaramjeychand/chat-wrapped.git
+    cd chat-wrapped
+    ```
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+3.  Run the development server:
+    ```bash
+    npm run dev
+    ```
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+4.  Open `http://localhost:5173` in your browser.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🛠️ Built With
+
+- **[React](https://react.dev/)** + **[Vite](https://vitejs.dev/)** - Fast frontend tooling.
+- **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first styling.
+- **[Framer Motion](https://www.framer.com/motion/)** - smooth animations.
+- **[Lucide React](https://lucide.dev/)** - Beautiful icons.
+- **[Recharts](https://recharts.org/)** - Data visualization.
+- **[html-to-image](https://github.com/bubkoo/html-to-image)** - High-fidelity export.
+
+## 📝 How to Export Chat History
+
+### WhatsApp
+1.  Open a chat (individual or group).
+2.  Tap on the contact/group name at the top.
+3.  Scroll down and tap **Export Chat**.
+4.  Select **Without Media**.
+5.  Save the `.txt` file to your device.
+
+### Telegram
+1.  Open Telegram Desktop.
+2.  Go to **Settings** > **Advanced** > **Export Telegram Data**.
+3.  Select "Machine-readable JSON" as the format (if available) OR just export chat history.
+4.  *Note: Current parser supports standard JSON export structure.*
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
