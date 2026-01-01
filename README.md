@@ -14,7 +14,7 @@ Turn your chat logs into a beautiful, interactive "Story" experience. Discover y
   - **The Chatterbox**: Total messages & top senders.
   - **The Night Owl**: Heatmap of your most active hours.
   - **The Ghost**: Average reply times and ghosting stats.
-  - **The Vibe**: Word clouds and top emojis.
+  - **The Vibe**: Top words.
   - **The Streaks**: Longest conversation streaks.
 - **📸 Export & Share**: Download individual slides or your entire wrapped summary as high-quality images (1080x1920) perfect for sharing on social media.
 
@@ -56,7 +56,7 @@ Turn your chat logs into a beautiful, interactive "Story" experience. Discover y
 ## 📝 How to Export Chat History
 
 ### WhatsApp
-1.  Open a chat (individual or group).
+1.  Open a chat (individual or group) on your smartphone (pc does not work).
 2.  Tap on the contact/group name at the top.
 3.  Scroll down and tap **Export Chat**.
 4.  Select **Without Media**.
