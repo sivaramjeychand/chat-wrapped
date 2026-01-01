@@ -5,8 +5,9 @@ import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { Download, X, Layers } from 'lucide-react';
 import type { ChatStats } from '../types';
-import { MessageCircle, Flame, Quote, TrendingUp, Type, Calendar, Zap } from 'lucide-react';
+import { MessageCircle, Flame, Quote, TrendingUp, Type, Calendar, Zap, Moon } from 'lucide-react';
 import { format } from 'date-fns';
+import { BarChart, Bar, XAxis, ResponsiveContainer, Cell } from 'recharts';
 
 interface StoryViewerProps {
     stats: ChatStats;
@@ -38,6 +39,23 @@ export function StoryViewer({ stats, onReset }: StoryViewerProps) {
     const busiestDay = stats.busiestDay;
     const longestStreak = stats.topStreaks.length > 0 ? stats.topStreaks[0] : null;
     const novelist = stats.longestMessages.length > 0 ? stats.longestMessages[0] : null;
+
+    // --- NIGHT OWL DATA PREP ---
+    const hourlyData = Array.from({ length: 24 }, (_, i) => ({
+        hour: i,
+        count: stats.hourlyActivity[i] || 0,
+        label: format(new Date().setHours(i, 0, 0, 0), 'ha') // e.g. "1am"
+    }));
+
+    const peakHourEntry = hourlyData.reduce((prev, curr) => (curr.count > prev.count ? curr : prev), hourlyData[0]);
+    const peakHour = peakHourEntry ? peakHourEntry.hour : 0;
+
+    let vibe = "Early Bird 🌅";
+    if (peakHour >= 22 || peakHour < 4) vibe = "Night Owl 🦉";
+    else if (peakHour >= 4 && peakHour < 12) vibe = "Morning Person ☕";
+    else if (peakHour >= 12 && peakHour < 17) vibe = "Afternoon Chatter ☀️";
+    else vibe = "Evening Socialite 🌆";
+
 
     const downloadSlide = async () => {
         if (!hiddenRef.current) return;
@@ -194,6 +212,33 @@ export function StoryViewer({ stats, onReset }: StoryViewerProps) {
                         {topChatters.map(([name, count], i) => (
                             <ListItem key={name} rank={i + 1} label={name} value={count.toLocaleString()} isExport={isExport} />
                         ))}
+                    </div>
+                </div>
+            )
+        },
+        {
+            id: 'nightOwl',
+            style: { background: 'linear-gradient(to bottom right, #0f172a, #312e81)' }, // slate-900 to indigo-900
+            render: ({ isExport }: { isExport?: boolean } = {}) => (
+                <div className={`flex flex-col items-center justify-center h-full text-center ${isExport ? 'p-12' : 'p-6'}`}>
+                    <Moon className={`${isExport ? 'w-48 h-48 mb-12' : 'w-24 h-24 mb-8'}`} style={{ color: '#ffeb3b' }} />
+                    <p className={`${isExport ? 'text-4xl mb-4' : 'text-2xl mb-2'} font-medium`} style={{ color: 'rgba(255, 255, 255, 0.9)' }}>Peak Activity</p>
+                    <h2 className={`${isExport ? 'text-8xl mb-8' : 'text-5xl mb-6'} font-black`} style={{ color: '#ffffff' }}>
+                        {peakHourEntry ? peakHourEntry.label : 'N/A'}
+                    </h2>
+                    <p className={`${isExport ? 'text-4xl mb-12' : 'text-2xl mb-8'} font-semibold`} style={{ color: '#a5b4fc' }}>{vibe}</p>
+
+                    <div className={`${isExport ? 'w-[800px] h-[400px]' : 'w-full max-w-xs h-32'}`}>
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={hourlyData}>
+                                <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+                                    {hourlyData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={entry.hour === peakHour ? '#fbbf24' : 'rgba(255, 255, 255, 0.3)'} />
+                                    ))}
+                                </Bar>
+                                <XAxis dataKey="hour" hide />
+                            </BarChart>
+                        </ResponsiveContainer>
                     </div>
                 </div>
             )
